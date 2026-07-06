@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using dataAccess.Entities;
 
-namespace Infrastructure.Postgres.Scaffolding;
+namespace dataAccess;
 
 public partial class BelmanDbContext : DbContext
 {

@@ -1,4 +1,10 @@
-import { Clock3, Grid2X2, Home, MapPin, Search } from "lucide-react";
+import {
+    AlertTriangle,
+    Grid2X2,
+    Home,
+    MapPin,
+    Search,
+} from "lucide-react";
 import type { PageKey } from "../types";
 
 type SidebarProps = {
@@ -28,15 +34,19 @@ const navItems = [
         icon: MapPin,
     },
     {
-        key: "recent",
-        label: "Recent",
-        icon: Clock3,
+        key: "alerts",
+        label: "Alerts",
+        icon: AlertTriangle,
     },
 ] as const;
 
 export default function Sidebar({ activePage, onChangePage }: SidebarProps) {
     return (
         <aside className="sidebar">
+            <div className="sidebar-logo">
+              
+            </div>
+
             <nav className="sidebar-nav">
                 {navItems.map((item) => {
                     const Icon = item.icon;
@@ -57,7 +67,6 @@ export default function Sidebar({ activePage, onChangePage }: SidebarProps) {
                     );
                 })}
             </nav>
-
         </aside>
     );
 }

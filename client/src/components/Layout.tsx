@@ -20,7 +20,6 @@ export default function Layout({
 
             <div className="main-panel">
                 <Header />
-
                 <main className="page-content">{children}</main>
             </div>
         </div>

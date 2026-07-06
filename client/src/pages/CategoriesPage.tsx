@@ -1,45 +1,35 @@
-import { Boxes, Cable, Layers, Radio, ShieldCheck, Wrench } from "lucide-react";
+import {
+    Boxes,
+    Cable,
+    Layers,
+    Radio,
+    ShieldCheck,
+    Wrench,
+} from "lucide-react";
+import ErrorState from "../components/ErrorState";
+import LoadingState from "../components/LoadingState";
+import { useCategories } from "../hooks/useCategories";
 
-const categories = [
-    {
-        title: "Metal Expansion Joints",
-        specs: "4 SPECS",
-        icon: Layers,
-        text: "Bellows made of stainless steel or high-nickel alloys to absorb thermal expansions in pipes.",
-    },
-    {
-        title: "Rubber Expansion Joints",
-        specs: "1 SPEC",
-        icon: Radio,
-        text: "Elastomer expansion joints with vibration reduction for pumps and cooling water systems.",
-    },
-    {
-        title: "Fabric Expansion Joints",
-        specs: "1 SPEC",
-        icon: Boxes,
-        text: "Multi-layer composite fabric bellows designed for gas ducts and low pressure systems.",
-    },
-    {
-        title: "Flexible Metal Hoses",
-        specs: "1 SPEC",
-        icon: Cable,
-        text: "Braided stainless steel hoses with multiple fittings for pressure and vacuum networks.",
-    },
-    {
-        title: "Piping Design Components",
-        specs: "1 SPEC",
-        icon: Wrench,
-        text: "Specialty piping connectors, custom flanges, and rectangular duct bellows.",
-    },
-    {
-        title: "On-site Service Parts",
-        specs: "1 SPEC",
-        icon: ShieldCheck,
-        text: "Gaskets, bolts, installation clamps, and service kits for workshop maintenance.",
-    },
-];
+function getCategoryIcon(name: string) {
+    if (name.includes("Metal")) return Layers;
+    if (name.includes("Rubber")) return Radio;
+    if (name.includes("Fabric")) return Boxes;
+    if (name.includes("Hose")) return Cable;
+    if (name.includes("Piping")) return Wrench;
+    return ShieldCheck;
+}
 
 export default function CategoriesPage() {
+    const { categories, loading, error } = useCategories();
+
+    if (loading) {
+        return <LoadingState text="Loading categories..." />;
+    }
+
+    if (error) {
+        return <ErrorState message={error} />;
+    }
+
     return (
         <>
             <section className="page-title-block">
@@ -52,27 +42,39 @@ export default function CategoriesPage() {
 
             <section className="category-grid">
                 {categories.map((category) => {
-                    const Icon = category.icon;
+                    const Icon = getCategoryIcon(category.name);
 
                     return (
-                        <article className="category-card" key={category.title}>
+                        <article className="category-card" key={category.id}>
                             <div className="category-top">
                                 <div className="category-icon">
                                     <Icon size={30} />
                                 </div>
-                                <span>{category.specs}</span>
+
+                                <span className="category-count">
+                                    {category.productCount}{" "}
+                                    {category.productCount === 1 ? "PRODUCT" : "PRODUCTS"}
+                                </span>
                             </div>
 
-                            <h2>{category.title}</h2>
-                            <p>{category.text}</p>
+                            <h2 className="category-title">{category.name}</h2>
+                            <p className="category-description">{category.description}</p>
 
-                            <button className="blue-button">
-                                Browse {category.title}
+                            <button className="category-button">
+                                Browse {category.name}
                             </button>
                         </article>
                     );
                 })}
             </section>
+
+            {/*<section className="info-panel">
+                <strong>Logistics Standards Compliant</strong>
+                <p>
+                    Categories correspond to Belman industrial product segments and
+                    warehouse picking workflows.
+                </p>
+            </section>*/}
         </>
     );
 }

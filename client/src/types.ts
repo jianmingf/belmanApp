@@ -3,7 +3,7 @@ export type PageKey =
     | "search"
     | "categories"
     | "warehouse"
-    | "recent";
+    | "alerts";
 
 export type DispatchStatus = "Pending" | "In Progress" | "Completed";
 

@@ -1,7 +1,10 @@
-import { ClipboardList, Database, RotateCcw } from "lucide-react";
+import { AlertTriangle, ClipboardList, Database } from "lucide-react";
 import logo from "../assets/logo.png";
+import { useStats } from "../hooks/useStats";
 
 export default function Header() {
+    const { stats } = useStats();
+
     return (
         <header className="header">
             <div className="logo-image-wrap">
@@ -11,13 +14,17 @@ export default function Header() {
             <div className="header-actions">
                 <div className="mini-stats">
           <span>
-            <Database size={13} /> DB: <b>9</b>
+            <Database size={13} /> DB: <b>{stats?.totalItems ?? "-"}</b>
           </span>
+
                     <span>
-            <RotateCcw size={13} /> Recent: <b>3</b>
+            <ClipboardList size={13} /> Requests:{" "}
+                        <b>{stats?.pendingRequests ?? "-"}</b>
           </span>
+
                     <span>
-            <ClipboardList size={13} /> Requests: <b>1</b>
+            <AlertTriangle size={13} /> Alerts:{" "}
+                        <b>{stats?.activeAlerts ?? "-"}</b>
           </span>
                 </div>
 

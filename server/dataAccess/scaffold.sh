@@ -10,6 +10,6 @@ dotnet ef dbcontext scaffold "$CONN_STR" Npgsql.EntityFrameworkCore.PostgreSQL \
     --context BelmanDbContext \
     --no-onconfiguring \
     --namespace dataAccess.Entities \
-    --context-namespace Infrastructure.Postgres.Scaffolding \
+    --context-namespace dataAccess \
     --schema belman \
     --force
