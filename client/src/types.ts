@@ -28,3 +28,12 @@ export type Product = {
     shelf: string;
     bin: string;
 };
+
+export type SearchPreset = {
+    search: string;
+    category?: string;
+    size?: string;
+    material?: string;
+    pressure?: string;
+    inStockOnly?: boolean;
+};

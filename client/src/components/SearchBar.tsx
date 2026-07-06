@@ -1,33 +1,52 @@
-import { Keyboard, Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 type SearchBarProps = {
-    placeholder?: string;
     value?: string;
     onChange?: (value: string) => void;
+    onSubmit?: (value: string) => void;
+    placeholder?: string;
 };
 
 export default function SearchBar({
-                                      placeholder = "SEARCH PRODUCT, DN SIZE, MATERIAL, OR ORDER #",
                                       value = "",
                                       onChange,
+                                      onSubmit,
+                                      placeholder = "Type product, DN size, pressure, or material...",
                                   }: SearchBarProps) {
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        onSubmit?.(value.trim());
+    }
+
+    function handleClear() {
+        onChange?.("");
+        onSubmit?.("");
+    }
+
     return (
-        <section className="search-bar">
-            <div className="search-icon">
-                <Search size={28} />
-            </div>
+        <form className="search-bar" onSubmit={handleSubmit}>
+            <button className="search-icon-button" type="submit" aria-label="Search">
+                <Search size={30} strokeWidth={2.5} />
+            </button>
 
             <input
-                type="text"
-                placeholder={placeholder}
                 value={value}
                 onChange={(event) => onChange?.(event.target.value)}
+                placeholder={placeholder}
+                type="text"
             />
 
-            <button className="keyboard-button">
-                <Keyboard size={16} />
-                KEYBOARD
-            </button>
-        </section>
+            {value && (
+                <button
+                    className="search-clear-button"
+                    type="button"
+                    onClick={handleClear}
+                    aria-label="Clear search"
+                >
+                    <X size={18} />
+                    Clear
+                </button>
+            )}
+        </form>
     );
 }

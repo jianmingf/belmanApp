@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ErrorState from "../components/ErrorState";
 import LoadingState from "../components/LoadingState";
 import SearchBar from "../components/SearchBar";
 import { useProducts } from "../hooks/useProducts";
+import type { SearchPreset } from "../types";
+
+type SearchPageProps = {
+    initialSearch?: string;
+    initialPreset?: SearchPreset;
+};
 
 const categories = [
     "Metal Expansion Joints",
@@ -13,7 +19,16 @@ const categories = [
     "On-site Service Parts",
 ];
 
-const sizes = ["DN 50", "DN 100", "DN 150", "DN 250", "DN 400", "DN 600"];
+const sizes = [
+    "DN 50",
+    "DN 100",
+    "DN 150",
+    "DN 250",
+    "DN 400",
+    "DN 600",
+    "800x600",
+    "1200x800",
+];
 
 const materials = [
     "Stainless Steel",
@@ -44,8 +59,11 @@ function ProductVisual({ categoryName }: { categoryName: string }) {
     );
 }
 
-export default function SearchPage() {
-    const [search, setSearch] = useState("");
+export default function SearchPage({
+                                       initialSearch = "",
+                                       initialPreset,
+                                   }: SearchPageProps) {
+    const [search, setSearch] = useState(initialSearch);
     const [category, setCategory] = useState<string | undefined>();
     const [size, setSize] = useState<string | undefined>();
     const [material, setMaterial] = useState<string | undefined>();
@@ -60,6 +78,25 @@ export default function SearchPage() {
         pressure,
         inStockOnly,
     });
+
+    useEffect(() => {
+        if (initialPreset) {
+            setSearch(initialPreset.search ?? "");
+            setCategory(initialPreset.category);
+            setSize(initialPreset.size);
+            setMaterial(initialPreset.material);
+            setPressure(initialPreset.pressure);
+            setInStockOnly(initialPreset.inStockOnly ?? false);
+            return;
+        }
+
+        setSearch(initialSearch);
+        setCategory(undefined);
+        setSize(undefined);
+        setMaterial(undefined);
+        setPressure(undefined);
+        setInStockOnly(false);
+    }, [initialSearch, initialPreset]);
 
     function resetFilters() {
         setSearch("");
@@ -81,7 +118,7 @@ export default function SearchPage() {
             </section>
 
             <SearchBar
-                placeholder="TYPE PRODUCT, DN SIZE, PRESSURE, OR MATERIAL..."
+                placeholder="Type product, DN size, pressure, or material..."
                 value={search}
                 onChange={setSearch}
             />
@@ -89,7 +126,10 @@ export default function SearchPage() {
             <section className="filter-card">
                 <div className="filter-header">
                     <h2>INDUSTRIAL FILTERS</h2>
-                    <button onClick={resetFilters}>Reset Filters</button>
+
+                    <button type="button" onClick={resetFilters}>
+                        Reset Filters
+                    </button>
                 </div>
 
                 <div className="filter-group">
@@ -99,6 +139,7 @@ export default function SearchPage() {
                         {categories.map((item) => (
                             <button
                                 key={item}
+                                type="button"
                                 className={category === item ? "selected" : ""}
                                 onClick={() =>
                                     setCategory(category === item ? undefined : item)
@@ -117,6 +158,7 @@ export default function SearchPage() {
                         {sizes.map((item) => (
                             <button
                                 key={item}
+                                type="button"
                                 className={size === item ? "selected" : ""}
                                 onClick={() => setSize(size === item ? undefined : item)}
                             >
@@ -133,6 +175,7 @@ export default function SearchPage() {
                         {materials.map((item) => (
                             <button
                                 key={item}
+                                type="button"
                                 className={material === item ? "selected" : ""}
                                 onClick={() =>
                                     setMaterial(material === item ? undefined : item)
@@ -151,6 +194,7 @@ export default function SearchPage() {
                         {pressures.map((item) => (
                             <button
                                 key={item}
+                                type="button"
                                 className={pressure === item ? "selected" : ""}
                                 onClick={() =>
                                     setPressure(pressure === item ? undefined : item)
@@ -161,6 +205,7 @@ export default function SearchPage() {
                         ))}
 
                         <button
+                            type="button"
                             className={inStockOnly ? "selected" : ""}
                             onClick={() => setInStockOnly((value) => !value)}
                         >
@@ -231,7 +276,9 @@ export default function SearchPage() {
                                     <strong>{product.stockQuantity} units</strong>
                                 </div>
 
-                                <button className="blue-button">View Details →</button>
+                                <button className="blue-button" type="button">
+                                    View Details →
+                                </button>
                             </article>
                         ))
                     )}

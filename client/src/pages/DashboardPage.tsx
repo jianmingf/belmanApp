@@ -5,25 +5,69 @@ import ErrorState from "../components/ErrorState";
 import LoadingState from "../components/LoadingState";
 import QrScannerModal from "../components/QrScannerModal";
 import QuickActionCard from "../components/QuickActionCard";
-import SearchBar from "../components/SearchBar";
 import StatusOverview from "../components/StatusOverview";
 import { useDashboard } from "../hooks/useDashboard";
-import type { PageKey } from "../types";
+import type { PageKey, SearchPreset } from "../types";
 
 type DashboardPageProps = {
     onChangePage: (page: PageKey) => void;
+    onSearchFromDashboard: (preset: SearchPreset) => void;
+    onQrScanned: (value: string) => void;
 };
 
-const workshopSearches = [
-    "DN 100",
-    "Stainless Steel",
-    "Axial Expansion Joint",
-    "Rubber Expansion Joint",
-    "Fabric Expansion Joint",
-    "Urgent Replacement",
+const workshopSearches: {
+    label: string;
+    preset: SearchPreset;
+}[] = [
+    {
+        label: "DN 100",
+        preset: {
+            search: "DN 100",
+            size: "DN 100",
+        },
+    },
+    {
+        label: "Stainless Steel",
+        preset: {
+            search: "Stainless Steel",
+            material: "Stainless Steel",
+        },
+    },
+    {
+        label: "Axial Expansion Joint",
+        preset: {
+            search: "Axial Expansion Joint",
+            category: "Metal Expansion Joints",
+        },
+    },
+    {
+        label: "Rubber Expansion Joint",
+        preset: {
+            search: "",
+            category: "Rubber Expansion Joints",
+        },
+    },
+    {
+        label: "Fabric Expansion Joint",
+        preset: {
+            search: "",
+            category: "Fabric Expansion Joints",
+        },
+    },
+    {
+        label: "Urgent Replacement",
+        preset: {
+            search: "",
+            inStockOnly: true,
+        },
+    },
 ];
 
-export default function DashboardPage({ onChangePage }: DashboardPageProps) {
+export default function DashboardPage({
+                                          onChangePage,
+                                          onSearchFromDashboard,
+                                          onQrScanned,
+                                      }: DashboardPageProps) {
     const [isQrScannerOpen, setIsQrScannerOpen] = useState(false);
 
     const {
@@ -37,18 +81,8 @@ export default function DashboardPage({ onChangePage }: DashboardPageProps) {
     } = useDashboard();
 
     function handleQrScanSuccess(value: string) {
-        console.log("Scanned QR value:", value);
-
-        /*
-          Later you can use this value to search or open product detail.
-    
-          Recommended QR content:
-          BM-AX-100-16
-          BM-FA-800-02
-          prod-ax-100
-        */
-
         setIsQrScannerOpen(false);
+        onQrScanned(value);
     }
 
     if (loading) {
@@ -76,8 +110,6 @@ export default function DashboardPage({ onChangePage }: DashboardPageProps) {
                     </p>
                 </div>
             </section>
-
-            <SearchBar />
 
             <section className="quick-grid">
                 <QuickActionCard
@@ -110,12 +142,16 @@ export default function DashboardPage({ onChangePage }: DashboardPageProps) {
                     <h2>COMMON WORKSHOP SEARCHES</h2>
 
                     <div className="tag-grid">
-                        {workshopSearches.map((tag) => (
+                        {workshopSearches.map((item) => (
                             <button
-                                key={tag}
-                                className={tag === "Urgent Replacement" ? "tag active" : "tag"}
+                                key={item.label}
+                                className={
+                                    item.label === "Urgent Replacement" ? "tag active" : "tag"
+                                }
+                                type="button"
+                                onClick={() => onSearchFromDashboard(item.preset)}
                             >
-                                {tag}
+                                {item.label}
                             </button>
                         ))}
                     </div>
@@ -151,6 +187,7 @@ export default function DashboardPage({ onChangePage }: DashboardPageProps) {
 
                                 <button
                                     className="ready-button"
+                                    type="button"
                                     onClick={() => resolveAlert(alert.id)}
                                 >
                                     Resolve
