@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="belman@ep-super-sun-asjbvd7m-pooler.c-4.eu-central-1.aws.neon.tech" uuid="136f5672-22e4-465d-8bd0-df8af9200300">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ep-super-sun-asjbvd7m-pooler.c-4.eu-central-1.aws.neon.tech:5432/belman</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </component>
+</project>
